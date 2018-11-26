@@ -26,6 +26,7 @@ BOT_ICON_URL=
 Run:
 
 ```bash
+dep ensure
 go build
 ./paperbot
 ```
