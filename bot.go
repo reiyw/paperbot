@@ -47,7 +47,7 @@ func main() {
 			channelQueue.PushBack(arxivTrendChannelId)
 		}
 	}
-	_, err = scheduler.Every().Day().At("20:07").Run(requestAndSendTrendingPapers)
+	_, err = scheduler.Every().Day().At("12:00").Run(requestAndSendTrendingPapers)
 	if err != nil {
 		fmt.Printf("Scheduler error: %s", err)
 	}
