@@ -49,7 +49,7 @@ func main() {
 	}
 	_, err = scheduler.Every().Day().At("12:00").Run(requestAndSendTrendingPapers)
 	if err != nil {
-		fmt.Printf("Scheduler error: %s", err)
+		fmt.Printf("Scheduler error: %s\n", err)
 	}
 
 	for msg := range rtm.IncomingEvents {
@@ -66,13 +66,17 @@ func main() {
 			for _, url := range urls {
 				p, err := Request(url)
 				if err != nil {
+					fmt.Printf("Request error: %s\n", err)
 					continue
 				}
 				papers = append(papers, *p)
 			}
-			for _, p := range papers {
-				rtm.SendMessage(rtm.NewOutgoingMessage(formatAsPlainPaperInfo(p), ev.Channel))
-				channelQueue.PushBack(ev.Channel)
+			if len(papers) > 0 {
+				for _, p := range papers {
+					rtm.SendMessage(rtm.NewOutgoingMessage(formatAsPlainPaperInfo(p), ev.Channel))
+					channelQueue.PushBack(ev.Channel)
+				}
+				continue
 			}
 
 			//if ev.Text == "trend" {
