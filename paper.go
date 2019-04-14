@@ -142,12 +142,12 @@ func FromAclweb(rawurl string) (*Paper, error) {
 		paper.Authors = append(paper.Authors, author)
 	})
 
-	paper.Volume, _ = doc.Find(`meta[name="citation_journal_title"]`).Attr("content")
+	paper.Volume, _ = doc.Find(`meta[name="citation_conference_title"]`).Attr("content")
 
 	paper.Venue = aclPrefixToVenue(paper.Id[0:1])
 
 	yearStr, _ := doc.Find(`meta[name="citation_publication_date"]`).Attr("content")
-	year, _ := strconv.ParseInt(yearStr, 10, 32)
+	year, _ := strconv.ParseInt(yearStr[0:4], 10, 32)
 	paper.Year = int(year)
 
 	paper.Preserver = Aclweb
@@ -200,7 +200,7 @@ func DetectPreserver(rawurl string) (Preserver, error) {
 	switch parsed.Hostname() {
 	case "arxiv.org":
 		return Arxiv, nil
-	case "aclweb.org", "aclanthology.info", "aclanthology.coli.uni-saarland.de":
+	case "aclweb.org", "www.aclweb.org", "aclanthology.info", "aclanthology.coli.uni-saarland.de":
 		return Aclweb, nil
 	case "openreview.net":
 		return OpenReview, nil
