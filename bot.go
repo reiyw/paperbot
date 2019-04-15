@@ -61,6 +61,13 @@ func main() {
 
 		case *slack.MessageEvent:
 			fmt.Printf("Message: %v\n", ev)
+
+			if ev.Text == "trend" {
+				fmt.Println("trend")
+				requestAndSendTrendingPapers()
+				continue
+			}
+
 			urls := xurls.Relaxed().FindAllString(ev.Text, -1)
 			var papers []Paper
 			for _, url := range urls {
@@ -79,10 +86,6 @@ func main() {
 				continue
 			}
 
-			//if ev.Text == "trend" {
-			//	fmt.Println("trend")
-			//	requestAndSendTrendingPapers()
-			//}
 
 			// if direct message or mention, do translate
 			if strings.HasPrefix(ev.Channel, "D") || strings.Contains(ev.Text, botUserId) {
