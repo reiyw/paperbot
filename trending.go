@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/chromedp/chromedp"
+	"github.com/chromedp/chromedp/runner"
 	"log"
 	"strconv"
 	"strings"
@@ -22,7 +23,9 @@ func RequestTrendingPapersOnArxiv() []TrendingPaper {
 	defer cancel()
 
 	// create chrome instance
-	c, err := chromedp.New(ctxt, chromedp.WithLog(log.Printf))
+	c, err := chromedp.New(ctxt, chromedp.WithRunnerOptions(
+		runner.Flag("headless", true),
+		runner.Flag("disable-gpu", true)))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,18 +33,6 @@ func RequestTrendingPapersOnArxiv() []TrendingPaper {
 	// run task list
 	var res string
 	err = c.Run(ctxt, requestBody(&res))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// shutdown chrome
-	err = c.Shutdown(ctxt)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// wait for chrome to finish
-	err = c.Wait()
 	if err != nil {
 		log.Fatal(err)
 	}
